@@ -1,0 +1,56 @@
+import csv
+
+
+# Load the tourist spot data from the CSV file
+def load_tourist_data(file_path):
+    tourist_data = []
+    with open(file_path, mode='r') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header row
+        for row in reader:
+            tourist_data.append(row)
+    return tourist_data
+
+
+# Function to get tourist spots in a city
+def get_tourist_spots(city, tourist_data):
+    spots = [item[1] for item in tourist_data if item[0].lower() == city.lower()]
+    if spots:
+        return f"Top tourist spots in {city}: " + ", ".join(spots)
+    return "Sorry, I couldn't find tourist spots for that city."
+
+
+# Function to get details about a tourist spot
+def get_spot_details(spot, tourist_data):
+    for item in tourist_data:
+        if item[1].lower() == spot.lower():
+            return (f"{item[1]} in {item[0]}: {item[2]}\n"
+                    f"Best Time to Visit: {item[3]}\n"
+                    f"Tips for Visitors: {item[4]}")
+    return "Sorry, I couldn't find details for that tourist spot."
+
+
+# Main chatbot function
+def chatbot():
+    file_path = 'tourist_spots.csv'
+    tourist_data = load_tourist_data(file_path)
+
+    print("Welcome to the Travel Chatbot!")
+    while True:
+        city = input("Enter the name of a famous city: ")
+        spots_response = get_tourist_spots(city, tourist_data)
+        print(spots_response)
+
+        spot = input("Enter the name of a tourist spot for more details (or type 'exit' to quit): ").strip()
+        if spot.lower() == 'exit':
+            print("Goodbye! Enjoy your travels.")
+            break
+
+        details_response = get_spot_details(spot, tourist_data)
+        print(details_response)
+
+
+# Run the chatbot
+if __name__ == "__main__":
+    chatbot()
+
